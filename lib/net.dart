@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:googleapis/calendar/v3.dart';
@@ -38,7 +37,6 @@ class APIClient {
           .toList());
 
   Future<AuthClient> getCredentials() async {
-
     var _credentials;
     if (Platform.isAndroid) {
       _credentials = ClientId(androidKey, "");
@@ -51,7 +49,7 @@ class APIClient {
     return client;
   }
 
-  Future<String> addEvent({
+  Future<bool> addEvent({
     required Lesson lesson,
     required AuthClient client,
     required DateTime start,
@@ -78,16 +76,13 @@ class APIClient {
 
     var calendar = CalendarApi(client);
     String calendarId = "primary";
-    calendar.events.insert(event, calendarId).then((value) {
-      print("ADDEDDD_________________${value.status}");
-      if (value.status == "confirmed") {
-        log('Event added in google calendar');
-      } else {
-        log("Unable to add event in google calendar");
-      }
-    });
-
-    return '';
+    var iters = 0;
+    String? result = '';
+    while (result != 'confirmed' && iters <= 5) {
+      result = (await calendar.events.insert(event, calendarId)).status;
+      iters++;
+    }
+    return result == 'confirmed';
   }
 
   void prompt(String url) async {

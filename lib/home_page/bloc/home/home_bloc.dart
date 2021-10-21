@@ -33,6 +33,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           .where((e) =>
               e.start.isBefore(event.end) && e.start.isAfter(event.start))
           .toList();
+      var count = 0;
+      var totalCount = lessons.length;
       for (int i = 0; i < lessons.length; i++) {
         yield HomeState.loading(percent: (i + 1) / (lessons.length + 1));
         var result = await apiClient.addEvent(
@@ -40,8 +42,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             client: event.client,
             start: lessons[i].start,
             end: lessons[i].end);
+        if (result)
+          count++;
       }
-      yield HomeState.data();
+      yield HomeState.data(count: count, totalCount:totalCount);
     } catch (ex) {
       yield HomeState.error();
       print(ex);

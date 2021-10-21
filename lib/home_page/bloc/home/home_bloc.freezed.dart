@@ -452,8 +452,11 @@ abstract class _GetCredentialsHomeEvent implements HomeEvent {
 class _$HomeStateTearOff {
   const _$HomeStateTearOff();
 
-  _DataHomeState data() {
-    return const _DataHomeState();
+  _DataHomeState data({required int count, required int totalCount}) {
+    return _DataHomeState(
+      count: count,
+      totalCount: totalCount,
+    );
   }
 
   _InitialHomeState initial() {
@@ -484,7 +487,7 @@ const $HomeState = _$HomeStateTearOff();
 mixin _$HomeState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() data,
+    required TResult Function(int count, int totalCount) data,
     required TResult Function() initial,
     required TResult Function(double percent) loading,
     required TResult Function(AuthClient? client) credentials,
@@ -493,7 +496,7 @@ mixin _$HomeState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? data,
+    TResult Function(int count, int totalCount)? data,
     TResult Function()? initial,
     TResult Function(double percent)? loading,
     TResult Function(AuthClient? client)? credentials,
@@ -542,6 +545,7 @@ abstract class _$DataHomeStateCopyWith<$Res> {
   factory _$DataHomeStateCopyWith(
           _DataHomeState value, $Res Function(_DataHomeState) then) =
       __$DataHomeStateCopyWithImpl<$Res>;
+  $Res call({int count, int totalCount});
 }
 
 /// @nodoc
@@ -553,42 +557,78 @@ class __$DataHomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
 
   @override
   _DataHomeState get _value => super._value as _DataHomeState;
+
+  @override
+  $Res call({
+    Object? count = freezed,
+    Object? totalCount = freezed,
+  }) {
+    return _then(_DataHomeState(
+      count: count == freezed
+          ? _value.count
+          : count // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalCount: totalCount == freezed
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_DataHomeState implements _DataHomeState {
-  const _$_DataHomeState();
+  const _$_DataHomeState({required this.count, required this.totalCount});
+
+  @override
+  final int count;
+  @override
+  final int totalCount;
 
   @override
   String toString() {
-    return 'HomeState.data()';
+    return 'HomeState.data(count: $count, totalCount: $totalCount)';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is _DataHomeState);
+    return identical(this, other) ||
+        (other is _DataHomeState &&
+            (identical(other.count, count) ||
+                const DeepCollectionEquality().equals(other.count, count)) &&
+            (identical(other.totalCount, totalCount) ||
+                const DeepCollectionEquality()
+                    .equals(other.totalCount, totalCount)));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(count) ^
+      const DeepCollectionEquality().hash(totalCount);
+
+  @JsonKey(ignore: true)
+  @override
+  _$DataHomeStateCopyWith<_DataHomeState> get copyWith =>
+      __$DataHomeStateCopyWithImpl<_DataHomeState>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() data,
+    required TResult Function(int count, int totalCount) data,
     required TResult Function() initial,
     required TResult Function(double percent) loading,
     required TResult Function(AuthClient? client) credentials,
     required TResult Function() error,
   }) {
-    return data();
+    return data(count, totalCount);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? data,
+    TResult Function(int count, int totalCount)? data,
     TResult Function()? initial,
     TResult Function(double percent)? loading,
     TResult Function(AuthClient? client)? credentials,
@@ -596,7 +636,7 @@ class _$_DataHomeState implements _DataHomeState {
     required TResult orElse(),
   }) {
     if (data != null) {
-      return data();
+      return data(count, totalCount);
     }
     return orElse();
   }
@@ -631,7 +671,14 @@ class _$_DataHomeState implements _DataHomeState {
 }
 
 abstract class _DataHomeState implements HomeState {
-  const factory _DataHomeState() = _$_DataHomeState;
+  const factory _DataHomeState({required int count, required int totalCount}) =
+      _$_DataHomeState;
+
+  int get count => throw _privateConstructorUsedError;
+  int get totalCount => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  _$DataHomeStateCopyWith<_DataHomeState> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -674,7 +721,7 @@ class _$_InitialHomeState implements _InitialHomeState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() data,
+    required TResult Function(int count, int totalCount) data,
     required TResult Function() initial,
     required TResult Function(double percent) loading,
     required TResult Function(AuthClient? client) credentials,
@@ -686,7 +733,7 @@ class _$_InitialHomeState implements _InitialHomeState {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? data,
+    TResult Function(int count, int totalCount)? data,
     TResult Function()? initial,
     TResult Function(double percent)? loading,
     TResult Function(AuthClient? client)? credentials,
@@ -797,7 +844,7 @@ class _$_LoadingHomeState implements _LoadingHomeState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() data,
+    required TResult Function(int count, int totalCount) data,
     required TResult Function() initial,
     required TResult Function(double percent) loading,
     required TResult Function(AuthClient? client) credentials,
@@ -809,7 +856,7 @@ class _$_LoadingHomeState implements _LoadingHomeState {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? data,
+    TResult Function(int count, int totalCount)? data,
     TResult Function()? initial,
     TResult Function(double percent)? loading,
     TResult Function(AuthClient? client)? credentials,
@@ -927,7 +974,7 @@ class _$_CredentialsHomeState implements _CredentialsHomeState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() data,
+    required TResult Function(int count, int totalCount) data,
     required TResult Function() initial,
     required TResult Function(double percent) loading,
     required TResult Function(AuthClient? client) credentials,
@@ -939,7 +986,7 @@ class _$_CredentialsHomeState implements _CredentialsHomeState {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? data,
+    TResult Function(int count, int totalCount)? data,
     TResult Function()? initial,
     TResult Function(double percent)? loading,
     TResult Function(AuthClient? client)? credentials,
@@ -1030,7 +1077,7 @@ class _$_ErrorHomeState implements _ErrorHomeState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() data,
+    required TResult Function(int count, int totalCount) data,
     required TResult Function() initial,
     required TResult Function(double percent) loading,
     required TResult Function(AuthClient? client) credentials,
@@ -1042,7 +1089,7 @@ class _$_ErrorHomeState implements _ErrorHomeState {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? data,
+    TResult Function(int count, int totalCount)? data,
     TResult Function()? initial,
     TResult Function(double percent)? loading,
     TResult Function(AuthClient? client)? credentials,

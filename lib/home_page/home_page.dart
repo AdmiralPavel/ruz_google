@@ -7,8 +7,8 @@ import 'package:googleapis_auth/googleapis_auth.dart';
 import 'bloc/home/home_bloc.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
+   HomePage({Key? key}) : super(key: key);
+final  _key = GlobalKey<FormState>();
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Form(
+                    key: widget._key,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: TextFormField(
                       validator: (_) => emailController.text == ''
@@ -88,11 +89,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        if (emailController.text != '' &&
-                            EmailValidator.validate(emailController.text)) {
+
+                        if (widget._key.currentState!.validate()
+                            ) {
                           FocusScope.of(context).unfocus();
                           if (client != null)
-                            BlocProvider.of<HomeBloc>(context).add(
+                           context.read<HomeBloc>().add(
                               HomeEvent.load(
                                 email: emailController.text,
                                 client: client!,
@@ -149,9 +151,9 @@ class _HomePageState extends State<HomePage> {
           ),
           BlocConsumer<HomeBloc, HomeState>(
             listener: (context, state) => state.maybeMap(
-                data: (_) => ScaffoldMessenger.of(context).showSnackBar(
+                data: (_data) => ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Успешно!'),
+                        content: Text('Успешно создано ${_data.count} из ${_data.totalCount} событий.'),
                       ),
                     ),
                 error: (_) => ScaffoldMessenger.of(context).showSnackBar(
@@ -164,7 +166,9 @@ class _HomePageState extends State<HomePage> {
                     client = _data.client;
                   });
                 },
-                orElse: () {}),
+                orElse: () {
+                  print(state);
+                }),
             builder: (context, state) => state.maybeMap(
               loading: (value) => Container(
                 color: Colors.black12,
